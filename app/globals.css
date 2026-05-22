@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+:root {
+  --gold: #C9A84C;
+  --charcoal: #1a1a1a;
+  --cream: #F5F0E8;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--charcoal);
+  overflow-x: hidden;
+}
+
+.font-display { font-family: 'Playfair Display', serif; }
+
+.section-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.btn-gold {
+  background: var(--gold);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  display: inline-block;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.btn-gold:hover { background: #a8893a; transform: translateY(-1px); }
+
+.btn-dark {
+  background: var(--charcoal);
+  color: #fff;
+  font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.btn-dark:hover { background: #333; transform: translateY(-1px); }
+
+.nav-link { position: relative; }
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--gold);
+  transition: width 0.3s ease;
+}
+.nav-link:hover::after { width: 100%; }
+
+.ken-burns {
+  animation: kenBurns 20s ease-in-out infinite alternate;
+}
+@keyframes kenBurns {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.08); }
+}
+
+@keyframes slideUp {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
+
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ken-burns { animation: none; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+@keyframes kenBurnsSlow {
+  0%   { transform: scale(1)    translateX(0px)   translateY(0px); }
+  100% { transform: scale(1.08) translateX(-20px) translateY(-10px); }
+}
