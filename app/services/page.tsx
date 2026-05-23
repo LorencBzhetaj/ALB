@@ -1,244 +1,65 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { Phone, Paintbrush, Bath, ChefHat, Grid3X3, Flame, Home, PlusSquare, CheckCircle, ArrowRight } from "lucide-react";
-import Testimonials from "@/components/Testimonials";
+import { Paintbrush, Bath, ChefHat, Grid3X3, Flame, Home, PlusSquare, ArrowRight } from "lucide-react";
 import CTASection from "@/components/CTASection";
-import ServiceCard from "@/components/ServiceCard";
-import HeroSlideshow from "@/components/HeroSlideshow";
+
+export const metadata: Metadata = {
+  title: "Remodeling Services | Painting, Kitchen, Bathroom & More",
+  description: "Complete remodeling services in Metro Detroit: painting, kitchen remodeling, bathroom remodeling, tile installation, fire & water restoration, home building and additions.",
+};
 
 const services = [
-  {
-    icon: <Paintbrush size={20} />,
-    title: "Interior & Exterior Painting",
-    description: "Professional painting for beautiful, lasting results. Interior walls, ceilings, trim, and full exterior painting.",
-    href: "/services/interior-exterior-painting",
-    imageUrl: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=600&q=75",
-  },
-  {
-    icon: <Bath size={20} />,
-    title: "Bathroom Remodeling",
-    description: "Beautiful, functional bathrooms built for you. Complete renovations from design to installation.",
-    href: "/services/bathroom-remodeling",
-    imageUrl: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=600&q=75",
-  },
-  {
-    icon: <ChefHat size={20} />,
-    title: "Kitchen Remodeling",
-    description: "Custom kitchens that blend style and function. Cabinetry, countertops, backsplashes & more.",
-    href: "/services/kitchen-remodeling",
-    imageUrl: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=75",
-  },
-  {
-    icon: <Grid3X3 size={20} />,
-    title: "Tile Installation",
-    description: "Expert tile installation for any space. Floors, walls, showers, backsplashes and custom patterns.",
-    href: "/services/tile-installation",
-    imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=75",
-  },
-  {
-    icon: <Flame size={20} />,
-    title: "Fire & Water Restoration",
-    description: "Fast, reliable restoration when you need it most. We restore your home to its original condition.",
-    href: "/services/fire-water-restoration",
-    imageUrl: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=75",
-  },
-  {
-    icon: <Home size={20} />,
-    title: "Home Building",
-    description: "Custom homes built with quality & care. From foundation to finish, we build your dream home.",
-    href: "/services/home-building",
-    imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=75",
-  },
-  {
-    icon: <PlusSquare size={20} />,
-    title: "Addition",
-    description: "Add more space and value to your home. Room additions, garage conversions, and expansions.",
-    href: "/services/addition",
-    imageUrl: "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=600&q=75",
-  },
+  { icon: <Paintbrush size={28} />, title: "Interior & Exterior Painting", desc: "Professional painting for beautiful, lasting results. Interior walls, ceilings, trim, and full exterior painting services.", href: "/services/interior-exterior-painting", img: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=700&q=80" },
+  { icon: <Bath size={28} />, title: "Bathroom Remodeling", desc: "Beautiful, functional bathrooms built for you. Complete renovations from design to installation.", href: "/services/bathroom-remodeling", img: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=700&q=80" },
+  { icon: <ChefHat size={28} />, title: "Kitchen Remodeling", desc: "Custom kitchens designed for the way you live. Cabinetry, countertops, backsplashes, flooring & more.", href: "/services/kitchen-remodeling", img: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=700&q=80" },
+  { icon: <Grid3X3 size={28} />, title: "Tile Installation", desc: "Expert tile installation for floors, walls, showers, backsplashes and custom patterns.", href: "/services/tile-installation", img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=700&q=80" },
+  { icon: <Flame size={28} />, title: "Fire & Water Restoration", desc: "Fast, reliable restoration when you need it most. We restore your home after fire or water damage.", href: "/services/fire-water-restoration", img: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=700&q=80" },
+  { icon: <Home size={28} />, title: "Home Building", desc: "Custom homes built with quality & care. From foundation to finish, we build your dream home.", href: "/services/home-building", img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" },
+  { icon: <PlusSquare size={28} />, title: "Addition", desc: "Add more space and value to your home with a room addition, garage conversion, or expansion.", href: "/services/addition", img: "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=700&q=80" },
 ];
 
-const whyUs = [
-  "18+ years of remodeling experience",
-  "Family-owned and operated",
-  "Direct communication with owner",
-  "Free, no-obligation estimates",
-  "Licensed and fully insured",
-  "No material markups — fair pricing",
-  "Quality craftsmanship on every job",
-  "HomeAdvisor verified contractor",
-];
-
-export default function HomePage() {
+export default function ServicesPage() {
   return (
     <>
-      {/* ── HERO ──────────────────────────────────────────────────────── */}
-      <section className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
-        {/* Cinematic slideshow background */}
-        <HeroSlideshow />
+      {/* Hero */}
+      <section className="relative pt-32 pb-20 px-6 bg-[#1a1a1a]">
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="section-tag">Our Services</p>
+          <h1 className="font-display text-4xl md:text-5xl font-bold text-white mt-3 mb-5">
+            Complete Remodeling Solutions
+          </h1>
+          <p className="text-gray-400 text-lg">
+            We offer a full range of remodeling services to enhance, improve and transform your home across Metro Detroit.
+          </p>
+        </div>
+      </section>
 
-        {/* Hero content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
-          <div className="max-w-2xl">
-            <p className="section-tag mb-4 animate-fade-in">
-              Metro Detroit's Trusted Remodeling Experts
-            </p>
-            <h1
-              className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-white leading-tight mb-6"
-              style={{ animation: "slideUp 0.9s ease-out 0.3s both" }}
-            >
-              Custom<br />Remodeling<br />Built With<br />
-              <span className="text-[#C9A84C]">Precision</span>
-            </h1>
-            <p
-              className="text-gray-300 text-lg md:text-xl mb-10 leading-relaxed"
-              style={{ animation: "slideUp 0.9s ease-out 0.5s both" }}
-            >
-              Kitchen, bathroom, painting, tile and full home renovations.
-            </p>
+      {/* Services list */}
+      <section className="py-20 px-6 bg-white">
+        <div className="max-w-7xl mx-auto space-y-8">
+          {services.map((s, i) => (
             <div
-              className="flex flex-col sm:flex-row gap-4"
-              style={{ animation: "slideUp 0.9s ease-out 0.7s both" }}
+              key={s.href}
+              className={`flex flex-col ${i % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"} gap-0 rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-shadow`}
             >
-              <Link
-                href="/contact"
-                className="btn-gold px-8 py-4 rounded text-white text-sm font-semibold text-center"
-              >
-                GET FREE ESTIMATE
-              </Link>
-              <a
-                href="tel:2482455220"
-                className="flex items-center justify-center gap-2 border border-white/30 text-white px-8 py-4 rounded text-sm font-semibold hover:border-[#C9A84C] hover:text-[#C9A84C] transition-colors"
-              >
-                <Phone size={16} /> CALL 248-245-5220
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-
-      {/* ── SERVICES ──────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <p className="section-tag">Our Services</p>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-[#1a1a1a] mt-2">
-              Complete Remodeling Solutions
-            </h2>
-            <p className="text-gray-500 mt-4 max-w-2xl mx-auto">
-              We offer a full range of remodeling services to enhance, improve and transform your home.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {services.slice(0, 4).map((s) => (
-              <ServiceCard key={s.href} {...s} />
-            ))}
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
-            {services.slice(4).map((s) => (
-              <ServiceCard key={s.href} {...s} />
-            ))}
-          </div>
-          <div className="text-center mt-12">
-            <Link
-              href="/services"
-              className="inline-flex items-center gap-2 btn-gold px-8 py-3 rounded text-white text-sm font-semibold"
-            >
-              VIEW ALL SERVICES <ArrowRight size={15} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── WHY CHOOSE US ─────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#1a1a1a] relative overflow-hidden">
-        <div className="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <p className="section-tag">Why Choose ALB</p>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-white mt-2 mb-6">
-              Quality Work.<br />Honest Service.<br />
-              <span className="text-[#C9A84C]">Beautiful Results.</span>
-            </h2>
-            <p className="text-gray-400 mb-8 leading-relaxed">
-              We're a family-owned remodeling company proudly serving Metro Detroit for over 18 years. Our mission is simple: deliver exceptional craftsmanship, honest service, and results that last.
-            </p>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
-              {whyUs.map((item, i) => (
-                <li key={i} className="flex items-start gap-3 text-gray-300 text-sm">
-                  <CheckCircle size={16} className="text-[#C9A84C] mt-0.5 flex-shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/about"
-              className="inline-flex items-center gap-2 text-[#C9A84C] font-semibold text-sm hover:gap-4 transition-all"
-            >
-              LEARN ABOUT US <ArrowRight size={15} />
-            </Link>
-          </div>
-          <div className="relative">
-            <img
-              src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=700&q=80"
-              alt="ALB remodeling team at work"
-              className="rounded-lg w-full object-cover h-[450px]"
-              loading="lazy"
-            />
-            <div className="absolute -bottom-6 -left-6 bg-[#C9A84C] text-white p-6 rounded-lg shadow-xl max-w-[200px]">
-              <p className="font-display text-4xl font-bold">18+</p>
-              <p className="text-sm font-medium mt-1">Years Serving Metro Detroit</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── FEATURED PROJECTS ─────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#F5F0E8]">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <p className="section-tag">Transformation Showcase</p>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-[#1a1a1a] mt-2">
-              See Our Recent Projects
-            </h2>
-            <p className="text-gray-500 mt-4 max-w-2xl mx-auto">
-              Browse a selection of our completed kitchen, bathroom, painting, tile, and exterior projects across Metro Detroit.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 auto-rows-[180px]">
-            {[
-              { src: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=700&q=75", alt: "Kitchen remodel", span: "col-span-2 row-span-2" },
-              { src: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=400&q=75", alt: "Bathroom renovation" },
-              { src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=75", alt: "Tile installation" },
-              { src: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400&q=75", alt: "Interior painting" },
-              { src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=75", alt: "Home exterior" },
-              { src: "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=400&q=75", alt: "Home addition" },
-            ].map((img, i) => (
-              <div key={i} className={`overflow-hidden rounded-lg group cursor-pointer ${img.span ?? ""}`}>
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading={i === 0 ? "eager" : "lazy"}
-                />
+              <div className="lg:w-1/2 overflow-hidden">
+                <img src={s.img} alt={s.title} className="w-full h-64 lg:h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy" />
               </div>
-            ))}
-          </div>
-          <div className="text-center mt-10">
-            <Link
-              href="/our-work"
-              className="inline-flex items-center gap-2 btn-gold px-8 py-3 rounded text-white text-sm font-semibold"
-            >
-              VIEW MORE PROJECTS <ArrowRight size={15} />
-            </Link>
-          </div>
+              <div className="lg:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+                <div className="w-12 h-12 bg-[#C9A84C]/10 rounded-lg flex items-center justify-center text-[#C9A84C] mb-5">
+                  {s.icon}
+                </div>
+                <h2 className="font-display text-2xl md:text-3xl font-bold text-[#1a1a1a] mb-4">{s.title}</h2>
+                <p className="text-gray-500 leading-relaxed mb-6">{s.desc}</p>
+                <Link href={s.href} className="inline-flex items-center gap-2 btn-gold px-6 py-3 rounded text-white text-sm font-semibold self-start">
+                  LEARN MORE <ArrowRight size={15} />
+                </Link>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ──────────────────────────────────────────────── */}
-      <Testimonials />
-
-      {/* ── CTA ───────────────────────────────────────────────────────── */}
       <CTASection />
     </>
   );
