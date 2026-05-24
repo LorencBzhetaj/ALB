@@ -18,6 +18,55 @@ function useInView(threshold = 0.2) {
   return { ref, inView };
 }
 
+/* ─── Video me autoplay të garantuar në iOS/Safari ─────────────────────── */
+function VideoAutoPlay() {
+  const ref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+
+    // iOS kërkon muted si property JS, jo vetëm HTML attribute
+    v.muted = true;
+    v.setAttribute("playsinline", "");
+    v.setAttribute("muted", "");
+
+    const play = () => {
+      v.play().catch(() => {
+        // Nëse dështon, provo pas ndërveprimit të parë të përdoruesit
+        const unlock = () => {
+          v.play().catch(() => {});
+        };
+        document.addEventListener("touchstart", unlock, { once: true });
+        document.addEventListener("click", unlock, { once: true });
+      });
+    };
+
+    if (v.readyState >= 2) {
+      play();
+    } else {
+      v.addEventListener("canplay", play, { once: true });
+    }
+
+    return () => v.removeEventListener("canplay", play);
+  }, []);
+
+  return (
+    <video
+      ref={ref}
+      src="/test.mp4"
+      autoPlay
+      muted
+      loop
+      playsInline
+      controls={false}
+      disablePictureInPicture
+      className="w-full object-cover"
+      style={{ maxHeight: "560px", display: "block" }}
+    />
+  );
+}
+
 /* ─── Main ──────────────────────────────────────────────────────────────── */
 export default function HomeTransformationAnimation() {
   const { ref: titleRef, inView: titleVisible } = useInView(0.4);
@@ -30,11 +79,14 @@ export default function HomeTransformationAnimation() {
       aria-labelledby="transform-heading"
     >
       {/* grid texture */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.022]"
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.022]"
         style={{
-          backgroundImage: "linear-gradient(#C9A84C 1px,transparent 1px),linear-gradient(90deg,#C9A84C 1px,transparent 1px)",
+          backgroundImage:
+            "linear-gradient(#C9A84C 1px,transparent 1px),linear-gradient(90deg,#C9A84C 1px,transparent 1px)",
           backgroundSize: "56px 56px",
-        }} />
+        }}
+      />
 
       {/* top bar */}
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#C9A84C]/50 to-transparent" />
@@ -52,14 +104,20 @@ export default function HomeTransformationAnimation() {
           }}
         >
           <p className="section-tag mb-4">Transforming Spaces. Elevating Lives.</p>
-          <h2 id="transform-heading"
-            className="font-display text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+          <h2
+            id="transform-heading"
+            className="font-display text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
+          >
             From Outdated<br />
             To{" "}
             <span className="relative inline-block text-[#C9A84C]">
               Outstanding
-              <span className="absolute -bottom-1 left-0 right-0 h-[2px] rounded-full"
-                style={{ background: "linear-gradient(90deg,transparent,#C9A84C80,transparent)" }} />
+              <span
+                className="absolute -bottom-1 left-0 right-0 h-[2px] rounded-full"
+                style={{
+                  background: "linear-gradient(90deg,transparent,#C9A84C80,transparent)",
+                }}
+              />
             </span>
           </h2>
           <p className="text-gray-400 max-w-lg mx-auto text-lg leading-relaxed">
@@ -77,33 +135,30 @@ export default function HomeTransformationAnimation() {
             boxShadow: "0 0 60px rgba(201,168,76,0.12)",
           }}
         >
-          <video
-            src="/test.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full object-cover"
-            style={{ maxHeight: "560px", display: "block" }}
-          />
+          <VideoAutoPlay />
         </div>
 
-        {/* CTA */}
-        <div className="text-center mt-14"
+        {/* ── CTA ── */}
+        <div
+          className="text-center mt-14"
           style={{
             opacity: inView ? 1 : 0,
             transform: inView ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity .8s ease 2.2s, transform .8s ease 2.2s",
+            transition: "opacity .8s ease .4s, transform .8s ease .4s",
           }}
         >
-          <Link href="/our-work"
-            className="inline-flex items-center gap-2 btn-gold px-8 py-4 rounded-xl text-white text-sm font-semibold group">
+          <Link
+            href="/our-work"
+            className="inline-flex items-center gap-2 btn-gold px-8 py-4 rounded-xl text-white text-sm font-semibold group"
+          >
             View Our Work
             <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
+
       </div>
 
+      {/* bottom bar */}
       <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#C9A84C]/25 to-transparent" />
     </section>
   );
