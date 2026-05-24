@@ -5,6 +5,7 @@ import CTASection from "@/components/CTASection";
 import ServiceCard from "@/components/ServiceCard";
 import HeroSlideshow from "@/components/HeroSlideshow";
 import HomeTransformationAnimation from "@/components/HomeTransformationAnimation";
+import ProjectsCarousel from "@/components/ProjectsCarousel";
 
 const services = [
   {
@@ -197,47 +198,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── FEATURED PROJECTS ─────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#F5F0E8]">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <p className="section-tag">Transformation Showcase</p>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-[#1a1a1a] mt-2">
-              See Our Recent Projects
-            </h2>
-            <p className="text-gray-500 mt-4 max-w-2xl mx-auto">
-              Browse a selection of our completed kitchen, bathroom, painting, tile, and exterior projects across Metro Detroit.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 auto-rows-[180px]">
-            {[
-              { src: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=700&q=75", alt: "Kitchen remodel", span: "col-span-2 row-span-2" },
-              { src: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=400&q=75", alt: "Bathroom renovation" },
-              { src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=75", alt: "Tile installation" },
-              { src: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400&q=75", alt: "Interior painting" },
-              { src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=75", alt: "Home exterior" },
-              { src: "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=400&q=75", alt: "Home addition" },
-            ].map((img, i) => (
-              <div key={i} className={`overflow-hidden rounded-lg group cursor-pointer ${img.span ?? ""}`}>
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading={i === 0 ? "eager" : "lazy"}
-                />
-              </div>
-            ))}
-          </div>
-          <div className="text-center mt-10">
-            <Link
-              href="/our-work"
-              className="inline-flex items-center gap-2 btn-gold px-8 py-3 rounded text-white text-sm font-semibold"
-            >
-              VIEW MORE PROJECTS <ArrowRight size={15} />
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* ── PROJECTS CAROUSEL ─────────────────────────────────────────── */}
+      <ProjectsCarousel />
 
       {/* ── TESTIMONIALS ──────────────────────────────────────────────── */}
       <Testimonials />
