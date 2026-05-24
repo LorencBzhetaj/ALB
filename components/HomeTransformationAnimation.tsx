@@ -18,7 +18,13 @@ function useInView(threshold = 0.2) {
   return { ref, inView };
 }
 
-/* ─── Video me autoplay të garantuar në iOS/Safari ─────────────────────── */
+/* ─── Video:
+     - autoplay pa buton (desktop + iOS/Android)
+     - sa herë hyn në viewport: nis nga sekonda 0
+     - luan 1 herë, ndalon në fund (pa loop)
+     - kur del nga viewport: pauzohet dhe kthehet në 0
+     - kur kthehet: nis sërish nga fillimi
+ ─────────────────────────────────────────────────────────────────────────── */
 function VideoAutoPlay() {
   const ref = useRef<HTMLVideoElement>(null);
 
@@ -26,39 +32,60 @@ function VideoAutoPlay() {
     const v = ref.current;
     if (!v) return;
 
-    // iOS kërkon muted si property JS, jo vetëm HTML attribute
-    v.muted = true;
+    /* iOS Safari kërkon këto si property JS, jo vetëm HTML attribute */
+    v.muted        = true;
+    v.defaultMuted = true;
     v.setAttribute("playsinline", "");
     v.setAttribute("muted", "");
 
-    const play = () => {
-      v.play().catch(() => {
-        // Nëse dështon, provo pas ndërveprimit të parë të përdoruesit
-        const unlock = () => {
-          v.play().catch(() => {});
-        };
-        document.addEventListener("touchstart", unlock, { once: true });
-        document.addEventListener("click", unlock, { once: true });
-      });
+    /* Funksioni i play-it me fallback për mobile */
+    const tryPlay = () => {
+      const p = v.play();
+      if (p !== undefined) {
+        p.catch(() => {
+          /* Nëse browser bllokoi, provo pas touch/click të parë */
+          const unlock = () => {
+            v.play().catch(() => {});
+            document.removeEventListener("touchstart", unlock);
+            document.removeEventListener("click",      unlock);
+          };
+          document.addEventListener("touchstart", unlock, { once: true });
+          document.addEventListener("click",      unlock, { once: true });
+        });
+      }
     };
 
-    if (v.readyState >= 2) {
-      play();
-    } else {
-      v.addEventListener("canplay", play, { once: true });
-    }
+    /* Sa herë hyn komponenti në viewport */
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          /* Nis nga sekonda 0 pa asnjë përjashtim */
+          v.currentTime = 0;
+          if (v.readyState >= 2) {
+            tryPlay();
+          } else {
+            v.addEventListener("canplay", tryPlay, { once: true });
+          }
+        } else {
+          /* Del nga viewport → pauzo + kthe në fillim për herën tjetër */
+          v.pause();
+          v.currentTime = 0;
+        }
+      },
+      { threshold: 0.25 }
+    );
 
-    return () => v.removeEventListener("canplay", play);
+    obs.observe(v);
+    return () => obs.disconnect();
   }, []);
 
   return (
     <video
       ref={ref}
       src="/test.mp4"
-      autoPlay
       muted
-      loop
       playsInline
+      /* PA loop — luan 1 herë dhe ndalon në fund */
       controls={false}
       disablePictureInPicture
       className="w-full object-cover"
