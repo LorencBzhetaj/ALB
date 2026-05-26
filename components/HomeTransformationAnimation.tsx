@@ -24,26 +24,25 @@ function useInView(threshold = 0.2) {
      - luan 1 herë, ndalon në fund (pa loop)
      - kur del nga viewport: pauzohet dhe kthehet në 0
      - kur kthehet: nis sërish nga fillimi
+     - nëse videoja nuk ekziston, shfaq fallback image
  ─────────────────────────────────────────────────────────────────────────── */
 function VideoAutoPlay() {
   const ref = useRef<HTMLVideoElement>(null);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
 
-    /* iOS Safari kërkon këto si property JS, jo vetëm HTML attribute */
     v.muted        = true;
     v.defaultMuted = true;
     v.setAttribute("playsinline", "");
     v.setAttribute("muted", "");
 
-    /* Funksioni i play-it me fallback për mobile */
     const tryPlay = () => {
       const p = v.play();
       if (p !== undefined) {
         p.catch(() => {
-          /* Nëse browser bllokoi, provo pas touch/click të parë */
           const unlock = () => {
             v.play().catch(() => {});
             document.removeEventListener("touchstart", unlock);
@@ -55,11 +54,9 @@ function VideoAutoPlay() {
       }
     };
 
-    /* Sa herë hyn komponenti në viewport */
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          /* Nis nga sekonda 0 pa asnjë përjashtim */
           v.currentTime = 0;
           if (v.readyState >= 2) {
             tryPlay();
@@ -67,7 +64,6 @@ function VideoAutoPlay() {
             v.addEventListener("canplay", tryPlay, { once: true });
           }
         } else {
-          /* Del nga viewport → pauzo + kthe në fillim për herën tjetër */
           v.pause();
           v.currentTime = 0;
         }
@@ -79,18 +75,46 @@ function VideoAutoPlay() {
     return () => obs.disconnect();
   }, []);
 
+  /* Fallback nëse videoja nuk ekziston ende */
+  if (hasError) {
+    return (
+      <div
+        className="w-full flex items-center justify-center"
+        style={{
+          minHeight: "320px",
+          background: "linear-gradient(135deg,#1a1a1a 0%,#2a2a2a 100%)",
+        }}
+      >
+        <div className="text-center px-6">
+          <div className="w-16 h-16 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/30 flex items-center justify-center mx-auto mb-4">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <polygon points="5,3 19,12 5,21" fill="#C9A84C" />
+            </svg>
+          </div>
+          <p className="text-white font-semibold mb-1">Transformation Video</p>
+          <p className="text-gray-500 text-sm">
+            Video coming soon — place your file at{" "}
+            <code className="text-[#C9A84C] text-xs">public/transformation.mp4</code>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <video
       ref={ref}
-      src="/test.mp4"
       muted
       playsInline
-      /* PA loop — luan 1 herë dhe ndalon në fund */
       controls={false}
       disablePictureInPicture
+      onError={() => setHasError(true)}
       className="w-full object-cover"
       style={{ maxHeight: "560px", display: "block" }}
-    />
+    >
+      {/* source tag me type — i domosdoshëm për iOS Safari */}
+      <source src="/test.mp4" type="video/mp4" />
+    </video>
   );
 }
 

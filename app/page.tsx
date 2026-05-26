@@ -120,6 +120,9 @@ export default function HomePage() {
 
 
 
+      {/* ── HOME TRANSFORMATION ───────────────────────────────────────── */}
+      <HomeTransformationAnimation />
+
       {/* ── SERVICES ──────────────────────────────────────────────────── */}
       <section className="py-24 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
@@ -152,9 +155,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* ── HOME TRANSFORMATION ───────────────────────────────────────── */}
-      <HomeTransformationAnimation />
 
       {/* ── WHY CHOOSE US ─────────────────────────────────────────────── */}
       <section className="py-24 px-6 bg-[#1a1a1a] relative overflow-hidden">
