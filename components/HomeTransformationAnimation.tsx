@@ -34,19 +34,28 @@ function VideoAutoPlay() {
     const v = ref.current;
     if (!v) return;
 
+    /* ── Vendos të gjitha properties si JS (iOS Safari kërkon këtë) ── */
     v.muted        = true;
     v.defaultMuted = true;
+    v.loop         = false;
+    v.playsInline  = true;
     v.setAttribute("playsinline", "");
+    v.setAttribute("webkit-playsinline", "");
     v.setAttribute("muted", "");
 
+    /* ── Ngarko videon eksplicit ── */
+    v.load();
+
+    /* ── Funksioni play me fallback touch/click ── */
     const tryPlay = () => {
-      const p = v.play();
-      if (p !== undefined) {
-        p.catch(() => {
+      v.currentTime = 0;
+      const promise = v.play();
+      if (promise !== undefined) {
+        promise.catch(() => {
+          /* iOS bllokoi — provo me ndërveprim manual */
           const unlock = () => {
+            v.currentTime = 0;
             v.play().catch(() => {});
-            document.removeEventListener("touchstart", unlock);
-            document.removeEventListener("click",      unlock);
           };
           document.addEventListener("touchstart", unlock, { once: true });
           document.addEventListener("click",      unlock, { once: true });
@@ -54,36 +63,38 @@ function VideoAutoPlay() {
       }
     };
 
+    /* ── IntersectionObserver: nis kur shfaqet, ndalon kur fshihet ── */
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          v.currentTime = 0;
-          if (v.readyState >= 2) {
+          /* readyState 0=HAVE_NOTHING 1=HAVE_METADATA 2=HAVE_CURRENT_DATA 3=HAVE_FUTURE_DATA 4=HAVE_ENOUGH_DATA */
+          if (v.readyState >= 3) {
             tryPlay();
           } else {
-            v.addEventListener("canplay", tryPlay, { once: true });
+            /* Prit ngarkimin pastaj luan */
+            const onReady = () => {
+              tryPlay();
+              v.removeEventListener("canplaythrough", onReady);
+            };
+            v.addEventListener("canplaythrough", onReady);
           }
         } else {
           v.pause();
           v.currentTime = 0;
         }
       },
-      { threshold: 0.25 }
+      { threshold: 0.2 }
     );
 
     obs.observe(v);
     return () => obs.disconnect();
   }, []);
 
-  /* Fallback nëse videoja nuk ekziston ende */
   if (hasError) {
     return (
       <div
         className="w-full flex items-center justify-center"
-        style={{
-          minHeight: "320px",
-          background: "linear-gradient(135deg,#1a1a1a 0%,#2a2a2a 100%)",
-        }}
+        style={{ minHeight: "320px", background: "linear-gradient(135deg,#1a1a1a,#2a2a2a)" }}
       >
         <div className="text-center px-6">
           <div className="w-16 h-16 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/30 flex items-center justify-center mx-auto mb-4">
@@ -93,8 +104,8 @@ function VideoAutoPlay() {
           </div>
           <p className="text-white font-semibold mb-1">Transformation Video</p>
           <p className="text-gray-500 text-sm">
-            Video coming soon — place your file at{" "}
-            <code className="text-[#C9A84C] text-xs">public/transformation.mp4</code>
+            Vendos videon te{" "}
+            <code className="text-[#C9A84C] text-xs">public/test.mp4</code>
           </p>
         </div>
       </div>
@@ -108,11 +119,11 @@ function VideoAutoPlay() {
       playsInline
       controls={false}
       disablePictureInPicture
+      preload="auto"
       onError={() => setHasError(true)}
       className="w-full object-cover"
       style={{ maxHeight: "560px", display: "block" }}
     >
-      {/* source tag me type — i domosdoshëm për iOS Safari */}
       <source src="/test.mp4" type="video/mp4" />
     </video>
   );
